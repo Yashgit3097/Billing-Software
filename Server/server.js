@@ -9,7 +9,14 @@ const ExcelJS = require('exceljs');
 
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    return callback(null, true); // allow any origin dynamically
+  },
+  credentials: true
+}));
 app.use(bodyParser.json());
 
 // MongoDB Connection
