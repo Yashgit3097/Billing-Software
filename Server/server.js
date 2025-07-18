@@ -64,7 +64,6 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-// Registration
 app.post('/api/register', async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 8);
@@ -78,27 +77,57 @@ app.post('/api/register', async (req, res) => {
     await user.save();
 
     const token = jwt.sign({ _id: user._id }, 'your_jwt_secret', { expiresIn: '10y' });
-    res.status(201).send({ user, token });
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false, // change to true in production with HTTPS
+      maxAge: 10 * 365 * 24 * 60 * 60 * 1000
+    });
+
+    res.status(201).send({ user });
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-// Login
+
 app.post('/api/login', async (req, res) => {
   try {
     const user = await User.findOne({ mobileNumber: req.body.mobileNumber });
-    if (!user) return res.status(404).send('User not found');
+    if (!user) return res.status(404).send({ message: 'User not found' });
 
     const isMatch = await bcrypt.compare(req.body.password, user.password);
-    if (!isMatch) return res.status(401).send('Invalid credentials');
+    if (!isMatch) return res.status(401).send({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ _id: user._id }, 'your_jwt_secret', { expiresIn: '10y' });
-    res.send({ user, token });
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false,
+      maxAge: 10 * 365 * 24 * 60 * 60 * 1000
+    });
+
+    res.send({ user });
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400).send({ message: 'Login failed', error: err });
   }
 });
+
+app.get('/api/auth/verify', async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).send({ message: 'Unauthorized' });
+
+    const decoded = jwt.verify(token, 'your_jwt_secret');
+    const user = await User.findById(decoded._id).select('-password');
+    if (!user) return res.status(404).send({ message: 'User not found' });
+
+    res.send({ user });
+  } catch (err) {
+    res.status(401).send({ message: 'Invalid token' });
+  }
+});
+
 
 
 /// Get all products
