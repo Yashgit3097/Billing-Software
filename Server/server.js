@@ -13,10 +13,13 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/bill_software', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect('mongodb+srv://yashgithub907:Y%40sh%403097@billingsoftware.r0kvacd.mongodb.net/', {
+  dbName: 'billing-db' // ← Replace with your actual database name
+})
+.then(() => console.log('MongoDB Connected'))
+.catch(err => console.error('MongoDB Connection Error:', err));
+
+
 
 // Models
 const User = mongoose.model('User', {
