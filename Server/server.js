@@ -370,7 +370,7 @@ app.get('/api/bills/export/excel', authenticate, async (req, res) => {
       worksheet.addRow({
         sr: index + 1,
         id: bill._id.toString(),
-        date: new Date(bill.date).toLocaleDateString(),
+        date: new Date(bill.date).toLocaleDateString('en-GB'),
         name: bill.customerName,
         total: bill.total.toFixed(2),
       });
@@ -459,7 +459,8 @@ app.post('/api/bills', authenticate, async (req, res) => {
     doc.fillColor('black')
        .fontSize(10)
        .text(`Invoice No: ${bill._id.toString().slice(-8)}`, doc.page.width - 200, 90, { width: 150, align: 'left' })
-       .text(`Invoice Date: ${new Date(bill.date).toLocaleDateString()}`, doc.page.width - 200, 110, { width: 150, align: 'left' });
+       .text(`Invoice Date: ${new Date(bill.date).toLocaleDateString('en-GB')
+}`, doc.page.width - 200, 110, { width: 150, align: 'left' });
 
     // Customer Details (left side)
     doc.fontSize(10)
@@ -603,7 +604,8 @@ app.get('/api/bills/:id/download', authenticate, async (req, res) => {
     doc.fillColor('black')
        .fontSize(10)
        .text(`Invoice No: ${bill._id.toString().slice(-8)}`, doc.page.width - 200, 90, { width: 150, align: 'left' })
-       .text(`Invoice Date: ${new Date(bill.date).toLocaleDateString()}`, doc.page.width - 200, 110, { width: 150, align: 'left' });
+       .text(`Invoice Date: ${new Date(bill.date).toLocaleDateString('en-GB')
+}`, doc.page.width - 200, 110, { width: 150, align: 'left' });
 //new Date(bill.date).toLocaleDateString()
     // Customer Details (left side)
     doc.fontSize(10)
