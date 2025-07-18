@@ -16,14 +16,10 @@ export default function App() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const token = Cookies.get('token'); // ✅ Read token from cookie
-        if (!token) {
-          setIsAuthenticated(false);
-          return;
-        }
-
+        const token = Cookies.get('token'); // still optional for debugging/logging
         const response = await fetch(`${baseUrl}/api/auth/verify`, {
-          headers: { Authorization: `Bearer ${token}` }
+          method: 'GET',
+          credentials: 'include', // ✅ important: send cookies
         });
 
         const data = await response.json();
@@ -75,12 +71,14 @@ function Login({ setAuth }) {
     try {
       const response = await fetch(`${baseUrl}/api/login`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // ✅ include cookie
         body: JSON.stringify(inputs)
       });
+
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('token', data.token);
         setAuth(true, data.user);
         navigate('/');
       } else {
@@ -146,13 +144,12 @@ function Login({ setAuth }) {
 }
 // Register Component
 function Register({ setAuth }) {
+  const navigate = useNavigate();
   const [inputs, setInputs] = useState({
     shopNameEnglish: '',
     mobileNumber: '',
     password: ''
   });
-
-  const navigate = useNavigate();
 
   const handleChange = e => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -163,12 +160,14 @@ function Register({ setAuth }) {
     try {
       const response = await fetch(`${baseUrl}/api/register`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // ✅ include cookie
         body: JSON.stringify(inputs)
       });
+
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('token', data.token);
         setAuth(true, data.user);
         navigate('/');
       } else {
