@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate, useNavigate, Link } from 'react-router-dom';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-
+const baseUrl = "https://billing-software-3j1q.onrender.com"
 // Main App Component
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,7 +22,7 @@ export default function App() {
           return;
         }
 
-        const response = await fetch('http://localhost:5000/api/auth/verify', {
+        const response = await fetch(`${baseUrl}/api/auth/verify`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -73,7 +73,7 @@ function Login({ setAuth }) {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch(`${baseUrl}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(inputs)
@@ -161,7 +161,7 @@ function Register({ setAuth }) {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/register', {
+      const response = await fetch(`${baseUrl}/api/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(inputs)
@@ -368,7 +368,7 @@ function Products({ user }) {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products', {
+      const response = await fetch(`${baseUrl}/api/products`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -388,8 +388,8 @@ function Products({ user }) {
     e.preventDefault();
     try {
       const url = editingId
-        ? `http://localhost:5000/api/products/${editingId}`
-        : 'http://localhost:5000/api/products';
+        ? `${baseUrl}/${editingId}`
+        : `${baseUrl}/api/products`;
       const method = editingId ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -431,7 +431,7 @@ function Products({ user }) {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const response = await fetch(`${baseUrl}/api/products/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -600,7 +600,7 @@ function CreateBill({ user }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products', {
+        const response = await fetch(`${baseUrl}/api/products`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -655,7 +655,7 @@ function CreateBill({ user }) {
 
   const generateBill = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/bills', {
+      const response = await fetch(`${baseUrl}/api/bills`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -822,7 +822,7 @@ function BillHistory({ user }) {
   const fetchBills = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/bills', {
+      const response = await fetch(`${baseUrl}/api/bills`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -844,7 +844,7 @@ function BillHistory({ user }) {
 
   const downloadBill = async (billId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/bills/${billId}/download`, {
+      const response = await fetch(`${baseUrl}/api/bills/${billId}/download`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -875,7 +875,7 @@ function BillHistory({ user }) {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/bills/${billId}`, {
+      const response = await fetch(`${baseUrl}/api/bills/${billId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -897,7 +897,7 @@ function BillHistory({ user }) {
 
   const exportToExcel = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/bills/export/excel', {
+      const response = await fetch(`${baseUrl}/api/bills/export/excel`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
