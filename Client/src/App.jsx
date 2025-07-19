@@ -388,7 +388,7 @@ function Products({ user }) {
     e.preventDefault();
     try {
       const url = editingId
-        ? `${baseUrl}/${editingId}`
+        ? `${baseUrl}/api/products/${editingId}`
         : `${baseUrl}/api/products`;
       const method = editingId ? 'PUT' : 'POST';
 
