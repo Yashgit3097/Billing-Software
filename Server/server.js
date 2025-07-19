@@ -137,8 +137,12 @@ app.post('/api/products', authenticate, async (req, res) => {
 // Update product
 app.put('/api/products/:id', authenticate, async (req, res) => {
   try {
+    console.log('USER:', req.user);
+    console.log('BODY:', req.body);
+    console.log('PARAMS:', req.params);
+
     const { nameEnglish, price, quantity } = req.body;
-    
+
     const product = await Product.findOneAndUpdate(
       { _id: req.params.id, userId: req.user._id },
       { nameEnglish, price, quantity },
@@ -151,6 +155,7 @@ app.put('/api/products/:id', authenticate, async (req, res) => {
 
     res.json(product);
   } catch (err) {
+    console.error(err);
     res.status(400).json({ error: err.message });
   }
 });
